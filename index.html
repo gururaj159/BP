@@ -9,6 +9,7 @@
     <link rel="manifest" href="manifest.json">
     <style>
         :root {
+            /* Changed only this from orange to green */
             --brand-green: #049869;
             --text-grey: #666;
         }
@@ -71,7 +72,7 @@
             height: 110px;
             border-radius: 50%;
             border-style: solid;
-            /* FIXED: Changed from --brand-orange to --brand-green */
+            /* Changed only this to use the green variable */
             border-color: var(--brand-green);
             display: flex;
             justify-content: center;
@@ -94,10 +95,11 @@
         .globe-img { width: 14px; height: 14px; margin-right: 4px; }
         .logo-txt { color: #000; font-weight: 600; font-style: italic; font-size: 14px; letter-spacing: -0.2px; }
 
+        /* Exactly as per your original Code 1 */
         .clock-display { 
-            font-size: 50px; 
-            font-weight: 620; 
-            letter-spacing: -1.2px; 
+            font-size: 56px; 
+            font-weight: 650; 
+            letter-spacing: -1.5px; 
             color: #333; 
             margin: 0; 
             line-height: 1;
