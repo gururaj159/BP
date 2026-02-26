@@ -46,7 +46,6 @@
             box-sizing: border-box;
         }
 
-        /* 1. Adjust this margin-top to move the text AND the circle down together */
         .header-section { 
             width: 90%; 
             margin-top: 15px; 
@@ -63,11 +62,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            
-            /* 2. INCREASE THIS to push the circle away from the header */
             margin-top: 95px; 
-            
-            /* 3. INCREASE THIS to push the time away from the circle */
             margin-bottom: 80px; 
         }
 
@@ -76,7 +71,8 @@
             height: 110px;
             border-radius: 50%;
             border-style: solid;
-            border-color: var(--brand-orange);
+            /* FIXED: Changed from --brand-orange to --brand-green */
+            border-color: var(--brand-green);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -182,9 +178,9 @@
         runTicket();
     </script>
     <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-  }
-</script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
 </body>
 </html>
