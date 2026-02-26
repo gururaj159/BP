@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>CTtransit</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            /* Changed from Orange to Green */
+            --brand-green: #28a745; 
+            --text-grey: #666;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; 
+            background-color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-bar {
+            height: 44px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 20px;
+            padding-top: env(safe-area-inset-top);
+        }
+
+        .close-btn { font-size: 28px; color: #d1d1d1; font-weight: 200; }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-bottom: env(safe-area-inset-bottom);
+            box-sizing: border-box;
+        }
+
+        .header-section { 
+            width: 90%; 
+            margin-top: 15px; 
+            margin-bottom: 20px; 
+        }
+        
+        .header-section h1 { margin: 0; font-size: 26px; font-weight: 700; color: #000; letter-spacing: -0.5px; }
+        .header-section p { margin: 2px 0 0; color: var(--text-grey); font-size: 16px; }
+
+        .security-graphic {
+            position: relative;
+            width: 100%;
+            height: 160px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 95px; 
+            margin-bottom: 80px; 
+        }
+
+        .breathing-ring {
+            width: 110px; 
+            height: 110px;
+            border-radius: 50%;
+            border-style: solid;
+            /* Using the new Green variable here */
+            border-color: var(--brand-green);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: stretch-border 1.2s ease-in-out infinite alternate;
+        }
+
+        @keyframes stretch-border {
+            0% { border-width: 12px; }
+            100% { border-width: 44px; margin: -32px; }
+        }
+
+        .logo-static {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .globe-img { width: 14px; height: 14px; margin-right: 4px; }
+        .logo-txt { color: #000; font-weight: 600; font-style: italic; font-size: 14px; letter-spacing: -0.2px; }
+
+        .clock-display { 
+            font-size: 56px; 
+            font-weight: 650; 
+            letter-spacing: -1.5px; 
+            color: #333; 
+            margin: 0; 
+            line-height: 1;
+        }
+
+        .info-card {
+            width: 90%;
+            border: 1px solid #f2f2f2;
+            border-radius: 6px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            box-sizing: border-box;
+            margin-top: 15px; 
+        }
+
+        .ticket-title { font-size: 21px; font-weight: 400; margin-bottom: 8px; color: #222; }
+        .region-list { font-size: 12.5px; color: #888; line-height: 1.4; margin-bottom: 25px; }
+        .expiry-line { font-size: 16.5px; font-weight: 500; border-top: 1px solid #f8f8f8; padding-top: 15px; color: #444; }
+
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <div class="close-btn">&times;</div>
+    </div>
+
+    <div class="main-content">
+        <div class="header-section">
+            <h1>CTtransit</h1>
+            <p>Show operator your ticket</p>
+        </div>
+
+        <div class="security-graphic">
+            <div class="logo-static">
+                <svg class="globe-img" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="48" fill="#1a305e"/>
+                    <path d="M10,50 Q50,20 90,50 Q50,80 10,50" fill="none" stroke="white" stroke-width="4"/>
+                </svg>
+                <div class="logo-txt">CT transit</div>
+            </div>
+            <div class="breathing-ring"></div>
+        </div>
+
+        <div class="clock-display" id="clock-live">--:--:-- --</div>
+
+        <div class="info-card">
+            <div class="ticket-title">Adult All Day - Local Service</div>
+            <div class="region-list">
+                Hartford, New Haven, Stamford, Bristol, Meriden, New Britain, Wallingford, and Waterbury
+            </div>
+            <div class="expiry-line" id="expiry-auto">Expires -- --, ---- at 2:00 AM</div>
+        </div>
+    </div>
+
+    <script>
+        function runTicket() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            minutes = minutes < 10 ? '0'+minutes : minutes;
+            seconds = seconds < 10 ? '0'+seconds : seconds;
+            
+            document.getElementById('clock-live').textContent = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+
+            const exp = new Date();
+            exp.setHours(2, 0, 0, 0);
+            if (now.getHours() >= 2) { exp.setDate(now.getDate() + 1); }
+
+            const m = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            document.getElementById('expiry-auto').textContent = `Expires ${m[exp.getMonth()]} ${exp.getDate()}, ${exp.getFullYear()} at 2:00 AM`;
+        }
+        setInterval(runTicket, 1000);
+        runTicket();
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
