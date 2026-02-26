@@ -9,8 +9,8 @@
     <link rel="manifest" href="manifest.json">
     <style>
         :root {
-            /* Changed from Orange to Green */
-            --brand-green: #28a745; 
+            /* Updated to the exact Emerald Green from your image */
+            --brand-green: #049869; 
             --text-grey: #666;
         }
 
@@ -35,7 +35,18 @@
             padding-top: env(safe-area-inset-top);
         }
 
-        .close-btn { font-size: 28px; color: #d1d1d1; font-weight: 200; }
+        .close-btn { 
+            font-size: 24px; 
+            color: #000; 
+            background: #f0f0f0; 
+            width: 32px; 
+            height: 32px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 50%;
+            font-weight: bold;
+        }
 
         .main-content {
             flex: 1;
@@ -53,26 +64,25 @@
             margin-bottom: 20px; 
         }
         
-        .header-section h1 { margin: 0; font-size: 26px; font-weight: 700; color: #000; letter-spacing: -0.5px; }
+        .header-section h1 { margin: 0; font-size: 26px; font-weight: 700; color: #444; letter-spacing: -0.5px; }
         .header-section p { margin: 2px 0 0; color: var(--text-grey); font-size: 16px; }
 
         .security-graphic {
             position: relative;
             width: 100%;
-            height: 160px;
+            height: 200px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 95px; 
-            margin-bottom: 80px; 
+            margin-top: 60px; 
+            margin-bottom: 60px; 
         }
 
         .breathing-ring {
-            width: 110px; 
-            height: 110px;
+            width: 160px; 
+            height: 160px;
             border-radius: 50%;
             border-style: solid;
-            /* Using the new Green variable here */
             border-color: var(--brand-green);
             display: flex;
             justify-content: center;
@@ -81,42 +91,48 @@
         }
 
         @keyframes stretch-border {
-            0% { border-width: 12px; }
-            100% { border-width: 44px; margin: -32px; }
+            0% { border-width: 15px; }
+            100% { border-width: 45px; margin: -30px; }
         }
 
         .logo-static {
             position: absolute;
             display: flex;
             align-items: center;
+            justify-content: center;
             z-index: 10;
+            background: white;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .globe-img { width: 14px; height: 14px; margin-right: 4px; }
-        .logo-txt { color: #000; font-weight: 600; font-style: italic; font-size: 14px; letter-spacing: -0.2px; }
+        .globe-img { width: 12px; height: 12px; margin-right: 3px; }
+        .logo-txt { color: #000; font-weight: 800; font-style: italic; font-size: 13px; letter-spacing: -0.2px; }
 
         .clock-display { 
-            font-size: 56px; 
-            font-weight: 650; 
-            letter-spacing: -1.5px; 
-            color: #333; 
+            font-size: 64px; 
+            font-weight: 700; 
+            letter-spacing: -1px; 
+            color: #3e4144; 
             margin: 0; 
             line-height: 1;
         }
 
         .info-card {
             width: 90%;
-            border: 1px solid #f2f2f2;
-            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             box-sizing: border-box;
-            margin-top: 15px; 
+            margin-top: 30px; 
         }
 
-        .ticket-title { font-size: 21px; font-weight: 400; margin-bottom: 8px; color: #222; }
-        .region-list { font-size: 12.5px; color: #888; line-height: 1.4; margin-bottom: 25px; }
-        .expiry-line { font-size: 16.5px; font-weight: 500; border-top: 1px solid #f8f8f8; padding-top: 15px; color: #444; }
+        .ticket-title { font-size: 22px; font-weight: 500; margin-bottom: 8px; color: #333; }
+        .region-list { font-size: 13px; color: #777; line-height: 1.5; margin-bottom: 30px; }
+        .expiry-line { font-size: 17px; font-weight: 700; color: #555; }
 
     </style>
 </head>
@@ -146,11 +162,11 @@
         <div class="clock-display" id="clock-live">--:--:-- --</div>
 
         <div class="info-card">
-            <div class="ticket-title">Adult All Day - Local Service</div>
+            <div class="ticket-title">Adult 2 Hour - Local Service</div>
             <div class="region-list">
                 Hartford, New Haven, Stamford, Bristol, Meriden, New Britain, Wallingford, and Waterbury
             </div>
-            <div class="expiry-line" id="expiry-auto">Expires -- --, ---- at 2:00 AM</div>
+            <div class="expiry-line" id="expiry-auto">Expires Feb 26, 2026 at 3:20 PM</div>
         </div>
     </div>
 
@@ -168,12 +184,17 @@
             
             document.getElementById('clock-live').textContent = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
 
-            const exp = new Date();
-            exp.setHours(2, 0, 0, 0);
-            if (now.getHours() >= 2) { exp.setDate(now.getDate() + 1); }
+            // Sets expiry to roughly 2 hours from now to match your "2 Hour" screenshot
+            const exp = new Date(now.getTime() + (2 * 60 * 60 * 1000));
+            let expHours = exp.getHours();
+            let expMinutes = exp.getMinutes();
+            let expAmpm = expHours >= 12 ? 'PM' : 'AM';
+            expHours = expHours % 12;
+            expHours = expHours ? expHours : 12;
+            expMinutes = expMinutes < 10 ? '0'+expMinutes : expMinutes;
 
-            const m = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            document.getElementById('expiry-auto').textContent = `Expires ${m[exp.getMonth()]} ${exp.getDate()}, ${exp.getFullYear()} at 2:00 AM`;
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            document.getElementById('expiry-auto').textContent = `Expires ${months[exp.getMonth()]} ${exp.getDate()}, ${exp.getFullYear()} at ${expHours}:${expMinutes} ${expAmpm}`;
         }
         setInterval(runTicket, 1000);
         runTicket();
